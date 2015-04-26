@@ -78,7 +78,6 @@ public class Examples {
         FuturePut futurePut = peers[PEER_1].put(nr).data(new Data(peers[PEER_1].peerAddress())).start();
 
         futurePut.addListener(new BaseFutureAdapter<FuturePut>() {
-            @Override
             public void operationComplete(FuturePut future) throws Exception {
                 System.out.println("\nPeer " + PEER_1 + " with id " + peers[PEER_1].peerID() +" stored [key: " + nr + ", value: " + peers[PEER_1].peerAddress());
 
@@ -92,7 +91,6 @@ public class Examples {
         FutureGet futureGet = peers[PEER_2].get(nr).start();
         // non-blocking operation
         futureGet.addListener(new BaseFutureAdapter<FutureGet>() {
-            @Override
             public void operationComplete(FutureGet future) throws Exception {
                 System.out.println("result non-blocking: " + future.data().object() + " \nfrom key: " + nr);
                 PeerAddress address = (PeerAddress) future.data().object();
@@ -107,7 +105,6 @@ public class Examples {
         final FutureDirect futureDirect = peers[PEER_2].peer().sendDirect(address).object("The number 12345 belongs to Max Powers").start();
 
         futureDirect.addListener(new BaseFutureAdapter<FutureDirect>() {
-            @Override
             public void operationComplete(FutureDirect futureDirect1) throws Exception {
                 System.out.println("Direct sending done! The reply message was: " + futureDirect1.object());
             }
@@ -117,7 +114,6 @@ public class Examples {
     private static void setupReplyHandler(PeerDHT[] peers) {
         for (final PeerDHT peer : peers) {
             peer.peer().objectDataReply(new ObjectDataReply() {
-                @Override
                 public Object reply(PeerAddress sender, Object request) throws Exception {
                     System.err.println("I'm " + peer.peerID() + " and I just got the message [" + request
                             + "] from " + sender.peerId());

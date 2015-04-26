@@ -19,13 +19,13 @@ public class ChannelCreatorAdapter extends BaseFutureAdapter<FutureChannelCreato
         this.peerAddress = peerAddress;
     }
 
-    @Override public void operationComplete(FutureChannelCreator futureChannelCreator) throws Exception {
+    public void operationComplete(FutureChannelCreator futureChannelCreator) throws Exception {
         ChannelCreator cc = futureChannelCreator.channelCreator();
 
         FutureResponse fr1 = peer.pingRPC().pingTCP(peerAddress, cc, new DefaultConnectionConfiguration());
 
         fr1.addListener(new BaseFutureAdapter<FutureResponse>() {
-            @Override public void operationComplete(FutureResponse futureResponse) throws Exception {
+            public void operationComplete(FutureResponse futureResponse) throws Exception {
                 if (futureResponse.isSuccess()) {
                     System.out.println("peer online TCP:" + peerAddress);
                 } else {
@@ -37,7 +37,7 @@ public class ChannelCreatorAdapter extends BaseFutureAdapter<FutureChannelCreato
         FutureResponse fr2 = peer.pingRPC().pingUDP(peerAddress, cc, new DefaultConnectionConfiguration());
 
         fr2.addListener(new BaseFutureAdapter<FutureResponse>() {
-            @Override public void operationComplete(FutureResponse futureResponse) throws Exception {
+            public void operationComplete(FutureResponse futureResponse) throws Exception {
                 if (futureResponse.isSuccess()) {
                     System.out.println("peer online UDP:" + peerAddress);
                 } else {

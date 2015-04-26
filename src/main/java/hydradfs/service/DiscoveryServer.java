@@ -20,7 +20,6 @@ public class DiscoveryServer implements Runnable {
         this.bindings = bindings;
     }
 
-    @Override
     public void run() {
         try {
             startServer();
