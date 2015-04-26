@@ -1,5 +1,8 @@
 package hydradfs.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.tomp2p.connection.ChannelCreator;
 import net.tomp2p.connection.DefaultConnectionConfiguration;
 import net.tomp2p.futures.BaseFutureAdapter;
@@ -13,6 +16,8 @@ public class ChannelCreatorAdapter extends BaseFutureAdapter<FutureChannelCreato
     private Peer peer;
 
     private PeerAddress peerAddress;
+    
+    static Logger logger = LoggerFactory.getLogger(ChannelCreatorAdapter.class);
 
     public ChannelCreatorAdapter(Peer peer, PeerAddress peerAddress) {
         this.peer = peer;
@@ -27,9 +32,9 @@ public class ChannelCreatorAdapter extends BaseFutureAdapter<FutureChannelCreato
         fr1.addListener(new BaseFutureAdapter<FutureResponse>() {
             public void operationComplete(FutureResponse futureResponse) throws Exception {
                 if (futureResponse.isSuccess()) {
-                    System.out.println("peer online TCP:" + peerAddress);
+                    logger.info("peer online TCP:" + peerAddress);
                 } else {
-                    System.out.println("offline TCP" + peerAddress);
+                    logger.info("offline TCP" + peerAddress);
                 }
             }
         });
@@ -39,9 +44,9 @@ public class ChannelCreatorAdapter extends BaseFutureAdapter<FutureChannelCreato
         fr2.addListener(new BaseFutureAdapter<FutureResponse>() {
             public void operationComplete(FutureResponse futureResponse) throws Exception {
                 if (futureResponse.isSuccess()) {
-                    System.out.println("peer online UDP:" + peerAddress);
+                    logger.info("peer online UDP:" + peerAddress);
                 } else {
-                    System.out.println("offline UDP" + peerAddress);
+                    logger.info("offline UDP" + peerAddress);
                 }
             }
         });
