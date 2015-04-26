@@ -9,11 +9,16 @@ import net.tomp2p.peers.PeerAddress;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DiscoveryServer implements Runnable {
 
     private PeerDHT master;
 
     private Bindings bindings;
+    
+    static Logger logger = LoggerFactory.getLogger(DiscoveryServer.class);
 
     public DiscoveryServer(PeerDHT peerDHT, Bindings bindings) {
         this.master = peerDHT;
@@ -24,22 +29,20 @@ public class DiscoveryServer implements Runnable {
         try {
             startServer();
         } catch (IOException e) {
-            //TODO log error
-            e.printStackTrace();
+        	logException(e);
         } catch (InterruptedException e) {
-            //TODO log error
-            e.printStackTrace();
+            logException(e);
         }
     }
 
     private void startServer() throws IOException, InterruptedException {
-        //TODO to be replaced with logs
-        System.out.println("Server started Listening to: " + DiscoverNetworks.discoverInterfaces(bindings));
-        System.out.println("address visible to outside is " + master.peerAddress());
+        
+        logger.info("Server started Listening to: " + DiscoverNetworks.discoverInterfaces(bindings));
+        logger.info("address visible to outside is " + master.peerAddress());
 
         while (true) {
             for (PeerAddress pa : master.peerBean().peerMap().all()) {
-                System.out.println("PeerAddress: " + pa);
+                logger.info("PeerAddress: " + pa);
                 Peer masterPeer = master.peer();
 
                 FutureChannelCreator fcc = masterPeer.connectionBean().reservation().create(1, 1);
@@ -49,5 +52,15 @@ public class DiscoveryServer implements Runnable {
 
             Thread.sleep(1500);
         }
+    }
+    
+    public void logException(Exception e){
+    	
+    	logger.debug(e.toString());
+    	StackTraceElement[] stackTrace = e.getStackTrace();
+    	for(int i=0; i<stackTrace.length; i++){
+    		logger.debug(stackTrace[i].toString());
+    	}
+    	
     }
 }
