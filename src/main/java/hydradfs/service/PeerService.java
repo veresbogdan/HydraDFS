@@ -4,6 +4,7 @@ import net.tomp2p.connection.Bindings;
 import net.tomp2p.dht.PeerBuilderDHT;
 import net.tomp2p.dht.PeerDHT;
 import net.tomp2p.futures.BaseFutureAdapter;
+import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDiscover;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerBuilder;
@@ -34,7 +35,7 @@ public class PeerService {
 		return peerDHT;
 	}
 
-	public static void discoverNetwork(Peer peer) throws UnknownHostException {
+	public static void discoverNetwork(final Peer peer) throws UnknownHostException {
 		FutureDiscover futureDiscover = peer.discover().inetAddress(InetAddress.getLocalHost()).ports(port).start();
 
 		futureDiscover.addListener(new BaseFutureAdapter<FutureDiscover>() {
@@ -42,8 +43,11 @@ public class PeerService {
 			public void operationComplete(FutureDiscover futureDiscover) throws Exception {
 				if (futureDiscover.isSuccess()) {
 					logger.info("Discover success: found that my outside address is " + futureDiscover.peerAddress());
+
+					FutureBootstrap futureBootstrap = peer.bootstrap().inetAddress(InetAddress.getLocalHost()).ports(port).start();
+					futureBootstrap.addListener(new FutureBootstrapAdapter(peer));
 				} else {
-					logger.info("failed " + futureDiscover.failedReason());
+					logger.error("failed " + futureDiscover.failedReason());
 				}
 			}
 		});
