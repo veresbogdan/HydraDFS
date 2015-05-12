@@ -12,12 +12,20 @@ import java.net.InetAddress;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Bindings bindings = new Bindings().addProtocol(StandardProtocolFamily.INET).addAddress(InetAddress.getByName("127.0.0.1"));
-        PeerDHT master = PeerService.createSimpleDHTPeer(bindings);
+    	
+    	//do this for the first peer, otherwise do not use bindings (give arguments when running to determine which peer u are)
+        //Bindings bindings = new Bindings().addInterface("en1");
+        
+        //otherwise if you are another peer use this
+        Bindings bind = new Bindings();
+        
+        
+        PeerDHT master = PeerService.createSimpleDHTPeer(bind);
 
-        PeerService.discoverNetwork(master.peer());
+        //manually the IP address of some peer that you know :) This one is the TAs..for now.
+        PeerService.discoverNetwork(master.peer(), "192.168.1.42");
 
-        DiscoveryServer discoveryServer = new DiscoveryServer(master, bindings);
+        DiscoveryServer discoveryServer = new DiscoveryServer(master, bind);
         discoveryServer.run();
     }
 }
