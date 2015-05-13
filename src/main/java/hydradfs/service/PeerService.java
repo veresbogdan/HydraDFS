@@ -20,7 +20,7 @@ import java.util.Random;
 public class PeerService {
 
 	private final static Integer port = 4000;
-	public final static Random RND = new Random(42L);
+	public final static Random RND = new Random();
 	
 	//create logger for this class
 	private static Logger logger = LoggerFactory.getLogger(PeerService.class);
@@ -35,8 +35,8 @@ public class PeerService {
 		return peerDHT;
 	}
 
-	public static void discoverNetwork(final Peer peer) throws UnknownHostException {
-		FutureDiscover futureDiscover = peer.discover().inetAddress(InetAddress.getLocalHost()).ports(port).start();
+	public static void discoverNetwork(final Peer peer, String ip) throws UnknownHostException {
+		FutureDiscover futureDiscover = peer.discover().inetAddress(InetAddress.getByName(ip)).ports(port).start();
 
 		futureDiscover.addListener(new BaseFutureAdapter<FutureDiscover>() {
             @Override
