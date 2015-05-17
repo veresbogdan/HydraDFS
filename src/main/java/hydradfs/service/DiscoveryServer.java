@@ -35,7 +35,6 @@ public class DiscoveryServer implements Runnable {
     }
 
     private void startServer() throws IOException, InterruptedException {
-        
         logger.info("Server started Listening to: " + DiscoverNetworks.discoverInterfaces(bindings));
         logger.info("address visible to outside is " + master.peerAddress());
 
